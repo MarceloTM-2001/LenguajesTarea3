@@ -249,11 +249,11 @@ void Hitbloque(int rows,int columns){
         }else{
             int i,j,coord;
             coord=atoi(buffer);
-            if(coord/100==0){
+            if(coord==0){
+                continue;
+            }else if(coord/100==0){
                 j=coord%10;
                 i=coord/10;
-            }else if(coord==0){
-                continue;
             }else{
                 j=(coord%10)+(((coord/10)%10)*10);
                 i=coord/100;
