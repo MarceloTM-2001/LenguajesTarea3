@@ -250,7 +250,6 @@ void Hitbloque(int rows,int columns){
         }
         printf("[+]Client connected.\n");
 
-        send(clisockfd, "Hola\n", 13, 0);
         (recv(clisockfd, buffer, 100, 0));
 
         if(strcmp(buffer,lostballstr)==0){
