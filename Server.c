@@ -188,6 +188,7 @@ void Hitbloque(int rows,int columns){
     Block->vida--;
     if (Block->vida==0){
         char message[6];
+
         sprintf(message,"K:%d,%d",rows+1,columns+1);
         printf("%s",message);
         //send(clisockfd, message, 13, 0);
@@ -251,6 +252,8 @@ void Hitbloque(int rows,int columns){
             if(coord/100==0){
                 j=coord%10;
                 i=coord/10;
+            }else if(coord==0){
+                continue;
             }else{
                 j=(coord%10)+(((coord/10)%10)*10);
                 i=coord/100;
