@@ -201,6 +201,7 @@ void Hitbloque(int rows,int columns){
 
  int Beginconnection()
 {
+
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)
     {
@@ -233,9 +234,12 @@ void Hitbloque(int rows,int columns){
         return(1);
     }
     srand(time(NULL));
-    Initializegame(0);
     char lostballstr[]="LB";
     int Firstconnection=0;
+
+
+    Initializegame(0);
+    PrintSomething(8,5);
 
     while (ingame) {
         bzero(buffer, 256);
@@ -263,6 +267,8 @@ void Hitbloque(int rows,int columns){
                 j=(coord%10)+(((coord/10)%10)*10);
                 i=coord/100;
             }
+            i--;
+            j--;
             printf("Hay hit en i=%d j=%d\n",i,j);
             PrintSomething(i,j);
             Hitbloque(i,j);
