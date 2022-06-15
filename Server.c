@@ -191,7 +191,7 @@ void Hitbloque(int rows,int columns){
 
         sprintf(message,"K:%d,%d",rows+1,columns+1);
         printf("%s",message);
-        //send(clisockfd, message, 13, 0);
+        send(clisockfd, message, 13, 0);
         HandleBlockdestruction(Block);
     }
 
