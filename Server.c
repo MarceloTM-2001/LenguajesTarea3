@@ -121,7 +121,7 @@ void Handleendgame(int Wincondition){
     if(Wincondition==0){
         ingame=0;
         printf("Has Perdido\n");
-        send(clisockfd, "LG\n", 2, 0);
+        send(clisockfd, "LG", 13, 0);
     }else{
         int ajuste;
         if(ajustevelocidad!=4){
@@ -176,6 +176,7 @@ void HandleBlockdestruction(struct bloque *Block){
 
             send(clisockfd, "NL\n", 2, 0);
             printf("Añadir Vida\n");
+            send(clisockfd, "NL", 13, 0);
             printf("Se debía sumar una vida pero está en el límite %d\n",vidas);
         }
     }else{
@@ -190,19 +191,21 @@ void Hitbloque(int rows,int columns){
     Block->vida--;
     if (Block->vida==0){
 
-        //send(clisockfd, " ", 7 , 0);
-
-
-        char message[7];
-
-        sprintf(message,"K:%d,%d\n",rows+1,columns+1);
-        printf("%s",message);
-
-        send(clisockfd, message, 7 , 0);
-
+        if(columns<=9){
+            char message[8];
+            sprintf(message,"K:%d,%d\n",rows+1,columns+1);
+            printf("%s",message);
+            send(clisockfd, message, 8 , 0);
+        }
+        else{
+            char message[7];
+            sprintf(message,"K:%d,%d\n",rows+1,columns+1);
+            printf("%s",message);
+            send(clisockfd, message, 7 , 0);
+        }
         HandleBlockdestruction(Block);
-    }
 
+    }
 }
 
 
@@ -256,9 +259,9 @@ void Hitbloque(int rows,int columns){
             printf("[+]Client connected.\n");
             Firstconnection=1;
         }
+        printf("[+]Client connected.\n");
 
         (recv(clisockfd, buffer, 100, 0));
-        printf(buffer);
 
         if(strcmp(buffer,lostballstr)==0){
             LostBall();
