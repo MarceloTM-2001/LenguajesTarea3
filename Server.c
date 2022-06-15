@@ -4,6 +4,7 @@
 
 #include "Server.h"
 
+
 void Initializegrid(){
     for(int i=0;i!=8;i++){
         for(int j=0;j!=14;j++){
@@ -73,8 +74,9 @@ void Initializegame(int ajuste){
     *ptrbarra=140;
     *ptrcantidadBolas=1;
     *ptrcantidadBloques=8*14;
-    *ptrvelocidadBolas=5+ajustevelocidad;
     *ptrajustevelocidad=ajuste;
+    *ptrvelocidadBolas=5+ajustevelocidad;
+
     Initializegrid();
 }
 
@@ -148,6 +150,10 @@ void LostBall(){
 void HandleBlockdestruction(struct bloque *Block){
     cantidadBloques--;
     printf("Bloque destruido\n");
+    char message[2];
+    sprintf(message,"%d",Block->puntos);
+    printf("%s",message);
+    send(clisockfd, message, 13, 0);
     if(cantidadBloques==0){
         Handleendgame(1);
     }if(Block->power==0){
@@ -192,8 +198,7 @@ void Hitbloque(int rows,int columns){
 
 
 
-
-int Beginconnection()
+ int Beginconnection()
 {
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)
