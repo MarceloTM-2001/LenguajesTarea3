@@ -235,10 +235,15 @@ void Hitbloque(int rows,int columns){
     srand(time(NULL));
     Initializegame(0);
     char lostballstr[]="LB";
+    int Firstconnection=0;
 
     while (ingame) {
         bzero(buffer, 256);
         bzero(contentBuffer, 255);
+        if(Firstconnection==0){
+            printf("[+]Client connected.\n");
+            Firstconnection=1;
+        }
         printf("[+]Client connected.\n");
 
         send(clisockfd, "Hola\n", 13, 0);
