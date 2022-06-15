@@ -262,7 +262,7 @@ void Hitbloque(int rows,int columns){
         }
 
         (recv(clisockfd, buffer, 100, 0));
-        printf("%s\n", buffer);
+
         if(strcmp(buffer,lostballstr)==0){
 
             LostBall();
