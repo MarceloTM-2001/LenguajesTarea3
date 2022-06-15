@@ -264,7 +264,9 @@ void Hitbloque(int rows,int columns){
                 i=coord/100;
             }
             printf("Hay hit en i=%d j=%d\n",i,j);
+            PrintSomething(i,j);
             Hitbloque(i,j);
+            PrintSomething(i,j);
         }
     }
 }
