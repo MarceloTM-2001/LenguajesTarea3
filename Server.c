@@ -92,11 +92,11 @@ void Barchange(int change){
     if(change==1 && barra!=560){
         barra*=2;
         printf("Se aumentó la barra a %d\n",barra);
-        send(clisockfd, "+B", 13, 0);
+        send(clisockfd, "+B\n", 2, 0);
     }else if(change==0 && barra!=35){
         barra/=2;
         printf("Se disminuyó la barra a %d\n",barra);
-        send(clisockfd, "-B", 13, 0);
+        send(clisockfd, "-B\n", 2, 0);
     }else{
         printf("Hubo cambio de barra pero no se aplicó ya que está en el límite  B=%d\n",barra);
     }
@@ -106,11 +106,11 @@ void SpeedChange(int Change){
     if(Change==1 && velocidadBolas!=9){
         velocidadBolas+=2;
         printf("Se aumentó la velocidad a %d\n",velocidadBolas);
-        send(clisockfd, "+V", 13, 0);
+        send(clisockfd, "+V\n", 2, 0);
     }else if(Change==0 && velocidadBolas!=1){
         velocidadBolas-=2;
         printf("Se disminuyó la velocidad a %d\n",velocidadBolas);
-        send(clisockfd, "-V", 13, 0);
+        send(clisockfd, "-V\n", 2, 0);
     }else{
         printf("Hubo cambio de velocidad pero no se aplicó ya que la velocidad está en el límite V= %d\n",velocidadBolas);
     }
@@ -121,7 +121,7 @@ void Handleendgame(int Wincondition){
     if(Wincondition==0){
         ingame=0;
         printf("Has Perdido\n");
-        send(clisockfd, "LG", 13, 0);
+        send(clisockfd, "LG\n", 2, 0);
     }else{
         int ajuste;
         if(ajustevelocidad!=4){
@@ -131,14 +131,14 @@ void Handleendgame(int Wincondition){
         }
         Initializegame(ajuste);
         printf("Siguiente ronda\n");
-        send(clisockfd, "WG", 13, 0);
+        send(clisockfd, "WG\n", 2, 0);
     }
 }
 
 void LostBall(){
     cantidadBolas--;
     vidas--;
-    send(clisockfd, "LL", 13, 0);
+    send(clisockfd, "LL\n", 2, 0);
     if(vidas==0){
         Handleendgame(0);
     }
@@ -150,10 +150,10 @@ void LostBall(){
 void HandleBlockdestruction(struct bloque *Block){
     cantidadBloques--;
     printf("Bloque destruido\n");
-    char message[2];
-    sprintf(message,"%d",Block->puntos);
+    char message[3];
+    sprintf(message,"%d\n",Block->puntos);
     printf("%s",message);
-    send(clisockfd, message, 13, 0);
+    send(clisockfd, message, 2, 0);
     if(cantidadBloques==0){
         Handleendgame(1);
     }if(Block->power==0){
@@ -169,12 +169,13 @@ void HandleBlockdestruction(struct bloque *Block){
     }else if(Block->power==5){
         printf("Añadir pelota\n");
         cantidadBolas++;
-        send(clisockfd, "NB", 13, 0);
+        send(clisockfd, "NB\n", 2, 0);
     }else if(Block->power==6){
         if(vidas!=3){
             vidas++;
+
+            send(clisockfd, "NL\n", 2, 0);
             printf("Añadir Vida\n");
-            send(clisockfd, "NL", 13, 0);
             printf("Se debía sumar una vida pero está en el límite %d\n",vidas);
         }
     }else{
@@ -183,15 +184,22 @@ void HandleBlockdestruction(struct bloque *Block){
 }
 
 void Hitbloque(int rows,int columns){
+
     struct bloque *Block;
     Block=&(grid[rows][columns]);
     Block->vida--;
     if (Block->vida==0){
-        char message[6];
 
-        sprintf(message,"K:%d,%d",rows+1,columns+1);
+        //send(clisockfd, " ", 7 , 0);
+
+
+        char message[7];
+
+        sprintf(message,"K:%d,%d\n",rows+1,columns+1);
         printf("%s",message);
-        send(clisockfd, message, 13, 0);
+
+        send(clisockfd, message, 7 , 0);
+
         HandleBlockdestruction(Block);
     }
 
@@ -248,9 +256,9 @@ void Hitbloque(int rows,int columns){
             printf("[+]Client connected.\n");
             Firstconnection=1;
         }
-        printf("[+]Client connected.\n");
 
         (recv(clisockfd, buffer, 100, 0));
+        printf(buffer);
 
         if(strcmp(buffer,lostballstr)==0){
             LostBall();
@@ -268,10 +276,12 @@ void Hitbloque(int rows,int columns){
             }
             i--;
             j--;
+
             printf("Hay hit en i=%d j=%d\n",i,j);
-            PrintSomething(i,j);
+            //send(clisockfd, "prueba\n", 7 , 0);
             Hitbloque(i,j);
-            PrintSomething(i,j);
+
+
         }
     }
 }
